@@ -1,5 +1,19 @@
-import { AlertTriangle, ExternalLink, MessageSquare, Bot, Wrench, CheckCircle2, Eye } from "lucide-react"
-import { INTERACTIONS, type Interaction } from "./data"
+"use client"
+
+import { useState } from "react"
+import {
+  AlertTriangle,
+  ExternalLink,
+  MessageSquare,
+  Bot,
+  Wrench,
+  CheckCircle2,
+  Eye,
+  MessagesSquare,
+  ChevronDown,
+  User,
+} from "lucide-react"
+import { INTERACTIONS, type Interaction, type Mensaje } from "./data"
 
 export function InteractionsView() {
   return (
@@ -42,11 +56,16 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
           </span>
           <h2 className="font-display text-base font-bold text-pretty">{interaction.titulo}</h2>
         </div>
-        {hasError && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-semibold text-destructive ring-1 ring-destructive/25">
-            <AlertTriangle className="h-3.5 w-3.5" /> Error de la IA detectado
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-muted-foreground ring-1 ring-border">
+            <Bot className="h-3.5 w-3.5" /> {interaction.herramienta}
           </span>
-        )}
+          {hasError && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-semibold text-destructive ring-1 ring-destructive/25">
+              <AlertTriangle className="h-3.5 w-3.5" /> Error de la IA detectado
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-5 p-5 sm:p-6">
@@ -92,6 +111,8 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
           {interaction.parteVisible}
         </Row>
 
+        <Transcript conversacion={interaction.conversacion} herramienta={interaction.herramienta} />
+
         <a
           href={interaction.enlace}
           target="_blank"
@@ -102,6 +123,76 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
         </a>
       </div>
     </li>
+  )
+}
+
+function Transcript({ conversacion, herramienta }: { conversacion: Mensaje[]; herramienta: string }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-secondary/20">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-secondary/40"
+      >
+        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <MessagesSquare className="h-4 w-4 text-primary" />
+          Conversación completa
+          <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-normal text-muted-foreground ring-1 ring-border">
+            {conversacion.length} mensajes
+          </span>
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 flex-none text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="space-y-4 border-t border-border px-4 py-5">
+          {conversacion.map((m, i) => (
+            <ChatBubble key={i} mensaje={m} herramienta={herramienta} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ChatBubble({ mensaje, herramienta }: { mensaje: Mensaje; herramienta: string }) {
+  const esUsuario = mensaje.rol === "usuario"
+  const parrafos = mensaje.texto.split("\n\n")
+
+  return (
+    <div className={`flex gap-3 ${esUsuario ? "flex-row-reverse" : "flex-row"}`}>
+      <span
+        className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${
+          esUsuario ? "bg-primary text-primary-foreground" : "bg-accent/15 text-accent ring-1 ring-accent/30"
+        }`}
+        aria-hidden="true"
+      >
+        {esUsuario ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+      </span>
+      <div className={`flex max-w-[85%] flex-col gap-1 ${esUsuario ? "items-end" : "items-start"}`}>
+        <span className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {esUsuario ? "Nosotros" : herramienta}
+        </span>
+        <div
+          className={`space-y-2 rounded-2xl px-4 py-3 text-sm leading-relaxed text-pretty ${
+            esUsuario
+              ? "rounded-tr-sm bg-primary/10 text-foreground ring-1 ring-primary/20"
+              : "rounded-tl-sm bg-card text-foreground ring-1 ring-border"
+          }`}
+        >
+          {parrafos.map((p, i) => (
+            <p key={i} className="whitespace-pre-line">
+              {p}
+            </p>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

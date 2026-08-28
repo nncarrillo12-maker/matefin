@@ -51,7 +51,7 @@ export const INTERACTIONS: Interaction[] = [
       "VF = VP · e^(0,10 · 2) = 1.000.000 · e^0,20 = 1.221.402,76. La herramienta ahora convierte automáticamente años y meses a años en el régimen continuo.",
     parteVisible:
       "El selector de tiempo del Simulador en modo 'Continuo' y la nota que aclara: 'El tiempo se convierte a años (convención del interés continuo)'.",
-    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
+    enlace: "https://share.gemini.google/nHWMT4ccw83p",
     conversacion: [
       {
         rol: "usuario",

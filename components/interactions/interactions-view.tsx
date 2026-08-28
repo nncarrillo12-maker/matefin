@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   AlertTriangle,
   ExternalLink,
@@ -10,7 +9,6 @@ import {
   CheckCircle2,
   Eye,
   MessagesSquare,
-  ChevronDown,
   User,
 } from "lucide-react"
 import { INTERACTIONS, type Interaction, type Mensaje } from "./data"
@@ -148,35 +146,21 @@ function OriginalLink({ enlace }: { enlace: string }) {
 }
 
 function Transcript({ conversacion, herramienta }: { conversacion: Mensaje[]; herramienta: string }) {
-  const [open, setOpen] = useState(false)
-
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-secondary/20">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-secondary/40"
-      >
-        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <MessagesSquare className="h-4 w-4 text-primary" />
-          Conversación completa
-          <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-normal text-muted-foreground ring-1 ring-border">
-            {conversacion.length} mensajes
-          </span>
+      <div className="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-semibold text-foreground">
+        <MessagesSquare className="h-4 w-4 text-primary" />
+        Conversación completa
+        <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-normal text-muted-foreground ring-1 ring-border">
+          {conversacion.length} mensajes
         </span>
-        <ChevronDown
-          className={`h-4 w-4 flex-none text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+      </div>
 
-      {open && (
-        <div className="space-y-4 border-t border-border px-4 py-5">
-          {conversacion.map((m, i) => (
-            <ChatBubble key={i} mensaje={m} herramienta={herramienta} />
-          ))}
-        </div>
-      )}
+      <div className="space-y-4 px-4 py-5">
+        {conversacion.map((m, i) => (
+          <ChatBubble key={i} mensaje={m} herramienta={herramienta} />
+        ))}
+      </div>
     </div>
   )
 }

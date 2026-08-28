@@ -40,7 +40,7 @@ export const INTERACTIONS: Interaction[] = [
   {
     id: 1,
     titulo: "Convención del interés continuo (error numérico detectado)",
-    herramienta: "Claude",
+    herramienta: "Gemini",
     prompt:
       "Escribe la fórmula para calcular el valor futuro en interés continuo y resuelve: VP = 1.000.000, tasa 10% anual, 24 meses. Trabaja el tiempo en la periodicidad que quieras.",
     respuestaIA:
@@ -51,7 +51,7 @@ export const INTERACTIONS: Interaction[] = [
       "VF = VP · e^(0,10 · 2) = 1.000.000 · e^0,20 = 1.221.402,76. La herramienta ahora convierte automáticamente años y meses a años en el régimen continuo.",
     parteVisible:
       "El selector de tiempo del Simulador en modo 'Continuo' y la nota que aclara: 'El tiempo se convierte a años (convención del interés continuo)'.",
-    enlace: "https://claude.ai/share/PEGAR-ENLACE-REAL-AQUI",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
     conversacion: [
       {
         rol: "usuario",
@@ -94,7 +94,7 @@ export const INTERACTIONS: Interaction[] = [
   {
     id: 2,
     titulo: "Ecuación de valor con múltiples flujos y fecha focal",
-    herramienta: "ChatGPT",
+    herramienta: "Gemini",
     prompt:
       "Necesito resolver ejercicios donde una deuda se paga con varios abonos en fechas distintas y hay que hallar el valor de un pago desconocido igualando en una fecha focal. Diséñame la lógica.",
     respuestaIA:
@@ -105,7 +105,7 @@ export const INTERACTIONS: Interaction[] = [
       "El modo 'Ecuación de valor' traslada correctamente todos los flujos a la focal y despeja monto, tasa o momento. Se aclara que en interés compuesto y continuo la focal no cambia el resultado, pero en simple sí.",
     parteVisible:
       "Todo el modo 'Ecuación de valor' del Simulador: la lista de flujos, el campo de fecha focal y los totales por grupo.",
-    enlace: "https://chatgpt.com/share/PEGAR-ENLACE-REAL-AQUI",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
     conversacion: [
       {
         rol: "usuario",
@@ -153,7 +153,7 @@ export const INTERACTIONS: Interaction[] = [
       "Todos los montos se muestran como $ 1.000.000,00 COP y la sección de Educación Financiera explica cada régimen con ejemplos de la vida diaria.",
     parteVisible:
       "El formato de todos los resultados del Simulador y las tarjetas explicativas de la sección Educación Financiera.",
-    enlace: "https://gemini.google.com/share/PEGAR-ENLACE-REAL-AQUI",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
     conversacion: [
       {
         rol: "usuario",

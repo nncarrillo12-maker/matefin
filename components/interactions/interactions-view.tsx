@@ -113,16 +113,37 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
 
         <Transcript conversacion={interaction.conversacion} herramienta={interaction.herramienta} />
 
-        <a
-          href={interaction.enlace}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary/60"
-        >
-          <ExternalLink className="h-4 w-4" /> Ver conversación original
-        </a>
+        <OriginalLink enlace={interaction.enlace} />
       </div>
     </li>
+  )
+}
+
+function OriginalLink({ enlace }: { enlace: string }) {
+  const esPlaceholder = enlace.includes("PEGAR-ENLACE-REAL-AQUI")
+
+  if (esPlaceholder) {
+    return (
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-dashed border-border bg-secondary/30 px-3 py-2 text-sm font-medium text-muted-foreground">
+        <ExternalLink className="h-4 w-4" /> Enlace de Gemini pendiente de pegar
+      </span>
+    )
+  }
+
+  const abrir = () => {
+    // En el preview (iframe) target="_blank" puede bloquearse; abrimos manualmente.
+    const nueva = window.open(enlace, "_blank", "noopener,noreferrer")
+    if (!nueva) window.location.href = enlace
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={abrir}
+      className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary/60"
+    >
+      <ExternalLink className="h-4 w-4" /> Ver conversación original en Gemini
+    </button>
   )
 }
 

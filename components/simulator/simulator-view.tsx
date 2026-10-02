@@ -4,6 +4,7 @@ import { useState } from "react"
 import { TrendingUp, CreditCard, Layers, Coins } from "lucide-react"
 import { SingleFlow } from "./single-flow"
 import { EquationOfValue } from "./equation-of-value"
+import { AnnuityCalculator, RateConverter } from "./advanced-calculators"
 import { Field, SelectInput, Segmented } from "./ui"
 import {
   type SharedConfig,
@@ -14,7 +15,7 @@ import {
 import type { Regime } from "@/lib/finance"
 import { CURRENCIES, type Currency } from "@/lib/format"
 
-type Mode = "single" | "equation"
+type Mode = "single" | "equation" | "tasas" | "anualidades"
 
 const REGIMES: { value: Regime; label: string; blurb: string }[] = [
   { value: "simple", label: "Simple", blurb: "El interés se calcula siempre sobre el capital inicial." },
@@ -149,9 +150,14 @@ export function SimulatorView() {
         >
           Ecuación de valor
         </button>
+        <button role="tab" aria-selected={mode === "tasas"} onClick={() => setMode("tasas")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "tasas" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Conversión de tasas</button>
+        <button role="tab" aria-selected={mode === "anualidades"} onClick={() => setMode("anualidades")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "anualidades" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Anualidades</button>
       </div>
 
-      {mode === "single" ? <SingleFlow config={config} /> : <EquationOfValue config={config} />}
+      {mode === "single" && <SingleFlow config={config} />}
+      {mode === "equation" && <EquationOfValue config={config} />}
+      {mode === "tasas" && <RateConverter />}
+      {mode === "anualidades" && <AnnuityCalculator currency={currency} />}
     </div>
   )
 }

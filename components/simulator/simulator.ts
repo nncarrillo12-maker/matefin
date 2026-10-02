@@ -9,6 +9,8 @@ export interface SharedConfig {
   periodicity: Periodicity
   currency: Currency
   operation: Operation
+  rateKind: "nominal" | "efectiva"
+  rateMode: "vencida" | "anticipada"
 }
 
 /** Meses que dura un periodo según la periodicidad elegida. */

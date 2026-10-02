@@ -29,8 +29,10 @@ export function SimulatorView() {
   const [periodicity, setPeriodicity] = useState<Periodicity>("anual")
   const [currency, setCurrency] = useState<Currency>("COP")
   const [operation, setOperation] = useState<Operation>("inversion")
+  const [rateKind, setRateKind] = useState<"nominal" | "efectiva">("efectiva")
+  const [rateMode, setRateMode] = useState<"vencida" | "anticipada">("vencida")
 
-  const config: SharedConfig = { regime, periodicity, currency, operation }
+  const config: SharedConfig = { regime, periodicity, currency, operation, rateKind, rateMode }
   const isContinuo = regime === "continuo"
   const activeRegime = REGIMES.find((r) => r.value === regime)!
 
@@ -75,6 +77,23 @@ export function SimulatorView() {
               ]}
             />
           </Field>
+
+          {regime === "compuesto" && (
+            <>
+              <Field label="Tipo de tasa" hint="El compuesto convierte la tasa ingresada a efectiva vencida del periodo.">
+                <SelectInput value={rateKind} onChange={(e) => setRateKind(e.target.value as "nominal" | "efectiva")}>
+                  <option value="efectiva">Efectiva / periódica</option>
+                  <option value="nominal">Nominal</option>
+                </SelectInput>
+              </Field>
+              <Field label="Modalidad de la tasa" hint="Una tasa anticipada se convierte automáticamente antes de calcular.">
+                <SelectInput value={rateMode} onChange={(e) => setRateMode(e.target.value as "vencida" | "anticipada")}>
+                  <option value="vencida">Vencida</option>
+                  <option value="anticipada">Anticipada</option>
+                </SelectInput>
+              </Field>
+            </>
+          )}
 
           <Field
             label="Periodicidad de la tasa"

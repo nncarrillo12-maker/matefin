@@ -7,6 +7,7 @@ import type { SharedConfig } from "./simulator"
 import { effectiveMonthsPerPeriod, periodUnitName } from "./simulator"
 import { solveSingle, type SingleUnknown, periodsToMonths } from "@/lib/finance"
 import { parseNumber, formatMoney, formatPercent, formatNumber, formatYearsMonths } from "@/lib/format"
+import { convertRate } from "@/lib/rates"
 
 const UNKNOWNS: { value: SingleUnknown; label: string }[] = [
   { value: "VF", label: "Valor futuro (VF)" },
@@ -30,7 +31,14 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
   const result = useMemo(() => {
     const vpNum = parseNumber(vp)
     const vfNum = parseNumber(vf)
-    const rate = parseNumber(ratePct) / 100
+    const enteredRate = parseNumber(ratePct) / 100
+    let rate = enteredRate
+    if (config.regime === "compuesto" && Number.isFinite(enteredRate)) {
+      rate = convertRate(
+        { rate: enteredRate, kind: config.rateKind, mode: config.rateMode, period: config.periodicity },
+        { kind: "efectiva", mode: "vencida", period: config.periodicity },
+      )
+    }
     const y = parseNumber(years) || 0
     const m = parseNumber(months) || 0
     const nPeriods = (y * 12 + m) / mpp
@@ -44,7 +52,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       n: unknown === "n" ? undefined : (y > 0 || m > 0 ? nPeriods : undefined),
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.regime, unknown, vp, vf, ratePct, years, months, mpp])
+  }, [config.regime, config.rateKind, config.rateMode, config.periodicity, unknown, vp, vf, ratePct, years, months, mpp])
 
   const show = (u: SingleUnknown) => unknown !== u
 

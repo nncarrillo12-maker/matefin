@@ -12,7 +12,11 @@ export const RATE_PERIODS: { value: RatePeriod; label: string; periodsPerYear: n
 ]
 
 export function periodsPerYear(period: RatePeriod, customMonths = 1) {
-  return period === "custom" ? 12 / Math.max(1, customMonths) : RATE_PERIODS.find((p) => p.value === period)?.periodsPerYear ?? 12
+  if (period === "custom") {
+    if (!Number.isFinite(customMonths) || customMonths <= 0) throw new Error("Los meses de la capitalización deben ser mayores que cero.")
+    return 12 / customMonths
+  }
+  return RATE_PERIODS.find((p) => p.value === period)?.periodsPerYear ?? 12
 }
 
 export function toEffectiveAnnual(rate: number, kind: RateKind, mode: RateMode, period: RatePeriod, customMonths = 1) {

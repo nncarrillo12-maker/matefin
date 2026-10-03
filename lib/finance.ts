@@ -136,6 +136,11 @@ export function solveSingle(input: SingleInput): SingleResult {
   const n = input.n
 
   try {
+    if (vp != null && (!Number.isFinite(vp) || vp <= 0)) return { ok: false, error: "El VP debe ser mayor que cero." }
+    if (vf != null && (!Number.isFinite(vf) || vf <= 0)) return { ok: false, error: "El VF debe ser mayor que cero." }
+    if (i != null && (!Number.isFinite(i) || i < 0)) return { ok: false, error: "La tasa no puede ser negativa." }
+    if (n != null && (!Number.isFinite(n) || n <= 0)) return { ok: false, error: "El periodo debe ser mayor que cero." }
+
     if (unknown === "VF") {
       if (vp == null || i == null || n == null) return { ok: false, error: "Faltan datos: VP, i y n." }
       const result = moveAmount(vp, 0, n, regime, i)

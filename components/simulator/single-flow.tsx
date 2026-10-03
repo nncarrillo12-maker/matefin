@@ -27,21 +27,27 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
   const mpp = effectiveMonthsPerPeriod(config)
   const unitName = periodUnitName(config)
   const isContinuo = config.regime === "continuo"
+  const calculationMpp = config.regime === "compuesto" ? 1 : mpp
 
   const result = useMemo(() => {
     const vpNum = parseNumber(vp)
     const vfNum = parseNumber(vf)
     const enteredRate = parseNumber(ratePct) / 100
     let rate = enteredRate
-    if (config.regime === "compuesto" && Number.isFinite(enteredRate)) {
-      rate = convertRate(
-        { rate: enteredRate, kind: config.rateKind, mode: config.rateMode, period: config.periodicity },
-        { kind: "efectiva", mode: "vencida", period: config.periodicity },
-      )
+    try {
+      if (config.regime === "compuesto" && Number.isFinite(enteredRate)) {
+        // El compuesto admite cualquier periodicidad: llevamos la tasa a E.M. vencida.
+        rate = convertRate(
+          { rate: enteredRate, kind: config.rateKind, mode: config.rateMode, period: config.periodicity },
+          { kind: "efectiva", mode: "vencida", period: "mensual" },
+        )
+      }
+    } catch {
+      return { ok: false, error: "La tasa ingresada no es válida para esta modalidad." }
     }
     const y = parseNumber(years) || 0
     const m = parseNumber(months) || 0
-    const nPeriods = (y * 12 + m) / mpp
+    const nPeriods = (y * 12 + m) / calculationMpp
 
     return solveSingle({
       regime: config.regime,
@@ -52,7 +58,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       n: unknown === "n" ? undefined : (y > 0 || m > 0 ? nPeriods : undefined),
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.regime, config.rateKind, config.rateMode, config.periodicity, unknown, vp, vf, ratePct, years, months, mpp])
+  }, [config.regime, config.rateKind, config.rateMode, config.periodicity, unknown, vp, vf, ratePct, years, months, calculationMpp])
 
   const show = (u: SingleUnknown) => unknown !== u
 
@@ -91,7 +97,9 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
               hint={
                 isContinuo
                   ? "En interés continuo la tasa es anual."
-                  : "La tasa y el tiempo deben estar en la misma periodicidad."
+                  : config.regime === "compuesto"
+                    ? "Se convierte automáticamente a efectiva mensual vencida; la operación puede durar cualquier cantidad de meses."
+                    : "La tasa y el tiempo deben estar en la misma periodicidad."
               }
             >
               <TextInput inputMode="decimal" placeholder="Ej: 2,5" value={ratePct} onChange={(e) => setRatePct(e.target.value)} />

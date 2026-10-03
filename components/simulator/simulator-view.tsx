@@ -100,7 +100,9 @@ export function SimulatorView() {
             hint={
               isContinuo
                 ? "En interés continuo la tasa se maneja de forma anual, por lo que la periodicidad no aplica."
-                : "La tasa y el tiempo se expresan en esta unidad. La app convierte años y meses automáticamente."
+                : regime === "compuesto"
+                  ? "La tasa puede tener otra periodicidad; se convierte a efectiva mensual antes del cálculo."
+                  : "La tasa y el tiempo deben expresarse en la misma unidad; no se convierten entre periodicidades."
             }
           >
             <SelectInput
@@ -126,6 +128,12 @@ export function SimulatorView() {
             </SelectInput>
           </Field>
         </div>
+
+        {operation === "credito" && (
+          <p className="mt-4 rounded-lg border border-credito/20 bg-credito/5 px-3 py-2 text-xs text-muted-foreground">
+            Herramienta construida con asistencia de inteligencia artificial Gemini.
+          </p>
+        )}
 
         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 font-medium text-secondary-foreground">

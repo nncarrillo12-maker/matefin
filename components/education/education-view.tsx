@@ -11,6 +11,19 @@ export function EducationView() {
 
   return (
     <div>
+      <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/25 bg-primary/5 p-4">
+        <span className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <Lightbulb className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <div>
+          <p className="font-display text-sm font-bold">Cómo se conecta con el Primer Corte</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Las anualidades se calculan utilizando las fórmulas y fundamentos del Interés Compuesto. Cada pago gana o
+            pierde valor con el paso del tiempo, igual que una bola de nieve que crece periodo a periodo.
+          </p>
+        </div>
+      </div>
+
       {/* Selector de tipo de interés */}
       <div
         role="tablist"

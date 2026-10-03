@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TrendingUp, CreditCard, Layers, Coins } from "lucide-react"
 import { SingleFlow } from "./single-flow"
 import { EquationOfValue } from "./equation-of-value"
@@ -34,7 +34,16 @@ export function SimulatorView() {
 
   const config: SharedConfig = { regime, periodicity, currency, operation, rateKind, rateMode }
   const isContinuo = regime === "continuo"
+  const isCompuesto = regime === "compuesto"
   const activeRegime = REGIMES.find((r) => r.value === regime)!
+
+  // Reset de seguridad: si el usuario está en una pestaña que solo aplica a "Compuesto"
+  // y cambia a "Simple" o "Continuo", vuelve automáticamente a "Flujo único"
+  useEffect(() => {
+    if (!isCompuesto && (mode === "tasas" || mode === "anualidades")) {
+      setMode("single")
+    }
+  }, [regime, mode, isCompuesto])
 
   return (
     <div className="space-y-8">
@@ -177,8 +186,12 @@ export function SimulatorView() {
         >
           Ecuación de valor
         </button>
-        <button role="tab" aria-selected={mode === "tasas"} onClick={() => setMode("tasas")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "tasas" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Conversión de tasas</button>
-        <button role="tab" aria-selected={mode === "anualidades"} onClick={() => setMode("anualidades")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "anualidades" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Anualidades</button>
+        {isCompuesto && (
+          <>
+            <button role="tab" aria-selected={mode === "tasas"} onClick={() => setMode("tasas")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "tasas" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Conversión de tasas</button>
+            <button role="tab" aria-selected={mode === "anualidades"} onClick={() => setMode("anualidades")} className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${mode === "anualidades" ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}>Anualidades</button>
+          </>
+        )}
       </div>
 
       {mode === "single" && <SingleFlow config={config} />}

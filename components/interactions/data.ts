@@ -188,3 +188,60 @@ export const INTERACTIONS: Interaction[] = [
     ],
   },
 ]
+
+/** Interacciones del Segundo Corte: conversión de tasas y anualidades. */
+export const SECOND_CUT_INTERACTIONS: Interaction[] = [
+  {
+    id: 4,
+    titulo: "Conversión de tasa nominal a efectiva mensual",
+    herramienta: "Gemini",
+    prompt: "Construye una conversión de tasa nominal anual del 24% con capitalización mensual a tasa efectiva mensual y anual. Usa formato colombiano.",
+    respuestaIA: "La primera respuesta presentó el 24% como si fuera directamente la tasa efectiva anual y no separó la tasa periódica de la tasa efectiva anual.",
+    correccion: "Pedimos separar j, m, i mensual e i efectiva anual, mostrar cada paso y validar que el resultado use punto de miles y coma decimal.",
+    resultadoFinal: "La herramienta divide j entre 12 para obtener 2,00% mensual y calcula la efectiva anual como (1 + 0,02)^12 − 1 = 26,82%.",
+    parteVisible: "La pestaña Conversión de tasas, sus selectores de modalidad y la tarjeta de resultado equivalente.",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
+    conversacion: [
+      { rol: "usuario", texto: "Convierte 24% nominal anual con capitalización mensual a tasa efectiva mensual y anual." },
+      { rol: "ia", texto: "La tasa efectiva anual es 24% porque la tasa nominal ya está expresada anualmente." },
+      { rol: "usuario", texto: "Eso es incorrecto: falta dividir entre las 12 capitalizaciones. Separa la tasa mensual de la efectiva anual y muestra el procedimiento." },
+      { rol: "ia", texto: "Tasa mensual = 0,24 / 12 = 0,02 = 2,00%. Tasa efectiva anual = (1 + 0,02)^12 − 1 = 0,2682 = 26,82%. La calculadora debe distinguir nominal, efectiva y periodicidad." },
+    ],
+    error: { valorIA: "24,00% efectiva anual", valorCorrecto: "26,82% efectiva anual", razon: "La respuesta confundió una tasa nominal con la tasa efectiva y omitió la capitalización mensual." },
+  },
+  {
+    id: 5,
+    titulo: "Anualidad vencida para un ahorro programado",
+    herramienta: "Gemini",
+    prompt: "Diseña un simulador para ahorrar $ 200.000 al final de cada mes durante 12 meses al 1,00% mensual y hallar el valor futuro.",
+    respuestaIA: "La IA inicialmente usó la fórmula de anualidad anticipada, dando a cada aporte un periodo adicional de crecimiento.",
+    correccion: "Aclaramos que el pago es al final de cada periodo y añadimos un selector visible entre vencida y anticipada.",
+    resultadoFinal: "Para pagos vencidos se usa VF = R · [((1 + i)^n − 1) / i], sin multiplicar por (1 + i).",
+    parteVisible: "El selector Vencida/Anticipada y el modo Anualidades del simulador, con cálculo de VP, VF y cuota.",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
+    conversacion: [
+      { rol: "usuario", texto: "Ahorro $ 200.000 al final de cada mes durante 12 meses al 1,00% mensual. ¿Cuál es el valor futuro?" },
+      { rol: "ia", texto: "Como los pagos son periódicos, multiplica la anualidad por (1 + i) para llevarlos al final." },
+      { rol: "usuario", texto: "No: al decir al final de cada mes es una anualidad vencida. El multiplicador adicional solo corresponde a pagos al inicio." },
+      { rol: "ia", texto: "Correcto. Para vencida: VF = R · [((1 + i)^n − 1) / i]. Para anticipada se multiplica ese resultado por (1 + i). El simulador debe pedir explícitamente la modalidad." },
+    ],
+    error: { valorIA: "Anualidad anticipada", valorCorrecto: "Anualidad vencida", razon: "La IA agregó un periodo de crecimiento que no corresponde a pagos realizados al final del mes." },
+  },
+  {
+    id: 6,
+    titulo: "Anualidad anticipada y diferenciación crédito/inversión",
+    herramienta: "Gemini",
+    prompt: "Crea una anualidad anticipada para un arriendo de $ 800.000 pagado al inicio de cada mes y diferencia el resultado de un crédito y una inversión.",
+    respuestaIA: "La respuesta mezcló el valor presente de una inversión con el saldo de un crédito y no explicó el efecto del pago al inicio.",
+    correccion: "Separamos los modos Crédito e Inversión, cambiamos el lenguaje de etiquetas y aplicamos el factor (1 + i) únicamente a la anualidad anticipada.",
+    resultadoFinal: "La aplicación muestra una anualidad anticipada clara: cada pago ocurre al inicio, aumenta el valor equivalente frente a la vencida y el usuario puede identificar si está financiando o ahorrando.",
+    parteVisible: "Los botones de Crédito e Inversión, el selector de anualidad anticipada y el resumen de VP/VF/cuota.",
+    enlace: "https://g.co/gemini/share/PEGAR-ENLACE-REAL-AQUI",
+    conversacion: [
+      { rol: "usuario", texto: "Un arriendo de $ 800.000 se paga al inicio de cada mes. Explica cómo modelarlo y diferéncialo de un crédito." },
+      { rol: "ia", texto: "Modela todos los pagos como una anualidad vencida y presenta el resultado como saldo del crédito." },
+      { rol: "usuario", texto: "El pago al inicio es anticipado, no vencido. Además, un arriendo o ahorro no debe etiquetarse automáticamente como crédito." },
+      { rol: "ia", texto: "La anualidad anticipada se obtiene multiplicando la fórmula vencida por (1 + i). La interfaz debe separar Crédito e Inversión para que VP, VF y cuota se interpreten correctamente." },
+    ],
+  },
+]

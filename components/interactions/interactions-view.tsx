@@ -11,7 +11,7 @@ import {
   MessagesSquare,
   User,
 } from "lucide-react"
-import { INTERACTIONS, type Interaction, type Mensaje } from "./data"
+import { INTERACTIONS, SECOND_CUT_INTERACTIONS, type Interaction, type Mensaje } from "./data"
 
 export function InteractionsView() {
   return (
@@ -34,11 +34,39 @@ export function InteractionsView() {
         </p>
       </div>
 
-      <ol className="space-y-6">
-        {INTERACTIONS.map((it) => (
-          <InteractionCard key={it.id} interaction={it} />
-        ))}
-      </ol>
+      <section aria-labelledby="primer-corte" className="space-y-4">
+        <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Registro inicial</p>
+            <h2 id="primer-corte" className="mt-1 font-display text-xl font-bold">Primer corte</h2>
+          </div>
+          <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground ring-1 ring-border">
+            {INTERACTIONS.length} interacciones
+          </span>
+        </div>
+        <ol className="space-y-6">
+          {INTERACTIONS.map((it) => (
+            <InteractionCard key={it.id} interaction={it} />
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="segundo-corte" className="space-y-4 pt-4">
+        <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Conversión y anualidades</p>
+            <h2 id="segundo-corte" className="mt-1 font-display text-xl font-bold">Segundo corte</h2>
+          </div>
+          <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent ring-1 ring-accent/20">
+            {SECOND_CUT_INTERACTIONS.length} interacciones nuevas
+          </span>
+        </div>
+        <ol start={4} className="space-y-6">
+          {SECOND_CUT_INTERACTIONS.map((it) => (
+            <InteractionCard key={it.id} interaction={it} />
+          ))}
+        </ol>
+      </section>
     </div>
   )
 }

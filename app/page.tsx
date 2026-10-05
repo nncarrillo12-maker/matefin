@@ -5,7 +5,6 @@ import {
   MessageSquareCode,
   ArrowRight,
   TrendingUp,
-  Landmark,
   Coins,
   Percent,
 } from "lucide-react"
@@ -52,11 +51,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
           <div className="flex flex-col justify-center">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium text-secondary-foreground">
-              <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
-              Matemáticas Financieras · Primer Corte · 2026-2
-            </span>
-            <h1 className="mt-5 text-balance font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+            <h1 className="text-balance font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
               Toma mejores decisiones con tu dinero
             </h1>
             <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
@@ -94,7 +89,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-2xl border border-border bg-card p-5 shadow-sm md:translate-x-6">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-primary">
                     <TrendingUp className="h-5 w-5" aria-hidden="true" />

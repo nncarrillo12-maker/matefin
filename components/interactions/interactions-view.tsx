@@ -54,7 +54,7 @@ export function InteractionsView() {
       <section aria-labelledby="segundo-corte" className="space-y-4 pt-4">
         <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Conversión y anualidades</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">Revisión del 21 de noviembre de 2026</p>
             <h2 id="segundo-corte" className="mt-1 font-display text-xl font-bold">Segundo corte</h2>
           </div>
           <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent ring-1 ring-accent/20">
@@ -95,10 +95,10 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
       </div>
 
       <div className="grid gap-5 p-5 sm:p-6">
-        <Row icon={MessageSquare} label="Prompt / instrucción" tone="primary">
+        <Row icon={MessageSquare} label={interaction.id >= 4 ? "Consulta resumida" : "Prompt / instrucción"} tone="primary">
           {interaction.prompt}
         </Row>
-        <Row icon={Bot} label="Qué respondió la IA" tone="muted">
+        <Row icon={Bot} label={interaction.id >= 4 ? "Comprobación matemática" : "Qué respondió la IA"} tone="muted">
           {interaction.respuestaIA}
         </Row>
 
@@ -137,15 +137,15 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
           {interaction.parteVisible}
         </Row>
 
-        <Transcript conversacion={interaction.conversacion} herramienta={interaction.herramienta} />
+        {interaction.conversacion.length > 0 && <Transcript conversacion={interaction.conversacion} herramienta={interaction.herramienta} />}
 
-        <OriginalLink enlace={interaction.enlace} />
+        <OriginalLink enlace={interaction.enlace} herramienta={interaction.herramienta} />
       </div>
     </li>
   )
 }
 
-function OriginalLink({ enlace }: { enlace: string }) {
+function OriginalLink({ enlace, herramienta }: { enlace: string; herramienta: string }) {
   const esPlaceholder = enlace.includes("PEGAR-ENLACE-REAL-AQUI")
 
   if (esPlaceholder) {
@@ -156,20 +156,12 @@ function OriginalLink({ enlace }: { enlace: string }) {
     )
   }
 
-  const abrir = () => {
-    // En el preview (iframe) target="_blank" puede bloquearse; abrimos manualmente.
-    const nueva = window.open(enlace, "_blank", "noopener,noreferrer")
-    if (!nueva) window.location.href = enlace
-  }
-
   return (
-    <button
-      type="button"
-      onClick={abrir}
+    <a href={enlace} target="_blank" rel="noopener noreferrer"
       className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary/60"
     >
-      <ExternalLink className="h-4 w-4" /> Ver conversación original en Gemini
-    </button>
+      <ExternalLink className="h-4 w-4" /> Ver conversación original en {herramienta}
+    </a>
   )
 }
 

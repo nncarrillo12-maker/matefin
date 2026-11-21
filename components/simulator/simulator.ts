@@ -1,12 +1,14 @@
 import type { Regime } from "@/lib/finance"
 import type { Currency } from "@/lib/format"
 
-export type Periodicity = "anual" | "semestral" | "cuatrimestral" | "trimestral" | "bimestral" | "mensual"
+import { RATE_PERIODS, type RatePeriod } from "@/lib/rates"
+export type Periodicity = RatePeriod
 export type Operation = "inversion" | "credito"
 
 export interface SharedConfig {
   regime: Regime
   periodicity: Periodicity
+  customMonths: number
   currency: Currency
   operation: Operation
   rateKind: "nominal" | "efectiva"
@@ -31,7 +33,7 @@ export function effectiveMonthsPerPeriod(config: SharedConfig): number {
     case "mensual":
       return 1
     default:
-      return 12
+      return config.periodicity === "custom" ? config.customMonths : 12 / (RATE_PERIODS.find(p => p.value === config.periodicity)?.periodsPerYear ?? 1)
   }
 }
 

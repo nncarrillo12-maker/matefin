@@ -21,7 +21,7 @@ export function periodsPerYear(period: RatePeriod, customMonths = 1) {
 
 export function toEffectiveAnnual(rate: number, kind: RateKind, mode: RateMode, period: RatePeriod, customMonths = 1) {
   const n = periodsPerYear(period, customMonths)
-  if (rate < 0 || rate >= 1 && mode === "anticipada") throw new Error("La tasa debe ser positiva y la anticipada menor que 100%.")
+  if (!Number.isFinite(rate) || rate < 0 || (kind === "nominal" ? rate / n : rate) >= 1 && mode === "anticipada") throw new Error("La tasa debe ser positiva y la anticipada menor que 100%.")
   const periodic = kind === "nominal" ? rate / n : rate
   const vencida = mode === "anticipada" ? periodic / (1 - periodic) : periodic
   return Math.pow(1 + vencida, n) - 1

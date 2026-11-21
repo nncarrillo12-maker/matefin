@@ -1,4 +1,5 @@
 "use client"
+import { convertRate } from "@/lib/rates"
 
 import { useMemo, useState } from "react"
 import { Plus, Trash2, Info, TrendingUp, CreditCard } from "lucide-react"
@@ -65,7 +66,14 @@ export function EquationOfValue({ config }: { config: SharedConfig }) {
 
   const result = useMemo(() => {
     const focalPeriods = ((parseNumber(focalYears) || 0) * 12 + (parseNumber(focalMonths) || 0)) / mpp
-    const rate = parseNumber(ratePct) / 100
+    if (!(mpp > 0)) return { ok: false, error: "Ingresa una periodicidad positiva." }
+    let rate = parseNumber(ratePct) / 100
+    if (config.regime === "compuesto" && unknown !== "i" && Number.isFinite(rate)) {
+      try {
+        const period = { period: config.periodicity, customMonths: config.customMonths }
+        rate = convertRate({ ...period, rate, kind: config.rateKind, mode: config.rateMode }, { ...period, kind: "efectiva", mode: "vencida" })
+      } catch { return { ok: false, error: "Revisa la tasa y su periodicidad." } }
+    }
 
     const engineFlows: Flow[] = flows.map((f) => {
       const time = ((parseNumber(f.years) || 0) * 12 + (parseNumber(f.months) || 0)) / mpp
@@ -91,7 +99,7 @@ export function EquationOfValue({ config }: { config: SharedConfig }) {
       i: unknown === "i" ? undefined : Number.isFinite(rate) ? rate : undefined,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.regime, flows, focalYears, focalMonths, ratePct, unknown, mpp])
+  }, [config.regime, config.periodicity, config.customMonths, config.rateKind, config.rateMode, flows, focalYears, focalMonths, ratePct, unknown, mpp])
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_1fr]">
@@ -115,7 +123,7 @@ export function EquationOfValue({ config }: { config: SharedConfig }) {
 
           {unknown !== "i" && (
             <Field
-              label={`Tasa de interés (i) — % ${config.regime === "continuo" ? "anual" : "por " + unitName.singular}`}
+              label={`Tasa de interés (i) — % ${config.regime === "compuesto" && config.rateKind === "nominal" || config.regime === "continuo" ? "anual" : "por " + unitName.singular}`}
             >
               <TextInput inputMode="decimal" placeholder="Ej: 2,5" value={ratePct} onChange={(e) => setRatePct(e.target.value)} />
             </Field>

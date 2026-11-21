@@ -21,7 +21,7 @@ const sections = [
     href: "/simulador",
     icon: Calculator,
     title: "Simulador / Cotización",
-    desc: "Calcula créditos e inversiones en los tres regímenes de interés. Resuelve VF, VP, tasa, tiempo, flujos desconocidos y ecuaciones de valor.",
+    desc: "Calcula créditos e inversiones con pagos únicos o periódicos. Convierte tasas, calcula anualidades y resuelve VF, VP, tasa, tiempo, flujos desconocidos y ecuaciones de valor.",
     cta: "Abrir el simulador",
   },
   {
@@ -56,7 +56,7 @@ export default function HomePage() {
             </h1>
             <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
               Una herramienta del banco para entender cómo funcionan los intereses y simular créditos e inversiones
-              reales. Ve el impacto del tiempo, la tasa y el capital antes de decidir.
+              reales. Convierte tasas y calcula cuotas, ahorros y abonos extraordinarios. Ve el impacto del tiempo, la tasa y el capital antes de decidir.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link

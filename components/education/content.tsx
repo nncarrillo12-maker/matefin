@@ -162,7 +162,7 @@ export const CONCEPTS: InterestConcept[] = [
     queEs:
       "Convertir una tasa es cambiar su forma de contar el interés sin cambiar la realidad del negocio. Así puedes comparar una tasa nominal con una efectiva y saber cuánto cuesta o cuánto crece el dinero.",
     comoFunciona:
-      "Primero miras cada cuánto se capitaliza la tasa: mensual, trimestral o semestralmente. Luego repartes la tasa nominal entre esos periodos y aplicas interés compuesto para obtener la tasa efectiva. Si capitaliza más seguido, el resultado efectivo suele ser un poco mayor.",
+      "Primero miras cada cuánto se capitaliza la tasa: mensual, trimestral o semestralmente. Luego repartes la tasa nominal entre esos periodos y aplicas interés compuesto para obtener la tasa efectiva. Si la tasa periódica es anticipada, primero convierte el descuento d en interés vencido con i = d/(1−d). Por ejemplo, un descuento mensual del 2 % equivale a 0,02/0,98 = 2,0408 % mensual vencido. Para pasar de mes a trimestre eleva (1+i) al cubo y resta uno. Si capitaliza más seguido, el resultado efectivo suele ser un poco mayor.",
     terceraPregunta: "¿Nominal, efectiva, anticipada o vencida?",
     terceraRespuesta:
       "La nominal anuncia una tasa anual que todavía debe dividirse por sus capitalizaciones. La efectiva muestra lo que realmente pasa en todo el periodo. Una tasa vencida se cobra al final del periodo; una anticipada se descuenta al comienzo, como ocurre en algunos descuentos comerciales.",
@@ -190,9 +190,9 @@ export const CONCEPTS: InterestConcept[] = [
       pasos: [
         { texto: "Divide la tasa nominal entre los 12 meses:", calculo: "i mensual = 0,12 / 12 = 0,01 = 1%" },
         { texto: "Convierte a tasa efectiva anual:", calculo: "EA = (1 + 0,01)^12 − 1 = 12,68%" },
-        { texto: "Calcula el ahorro al final del año:", calculo: "VF = 2.000.000 · (1,01)^12 = $ 2.253.649" },
+        { texto: "Calcula el ahorro al final del año:", calculo: "VF = 2.000.000 · (1,01)^12 = $ 2.253.650" },
       ],
-      resultado: "La tasa efectiva es 12,68% anual y el ahorro termina en aproximadamente $ 2.253.649.",
+      resultado: "La tasa efectiva es 12,68% anual y el ahorro termina en aproximadamente $ 2.253.650.",
     },
   },
   {
@@ -280,11 +280,11 @@ export const CONCEPTS: InterestConcept[] = [
         { label: "n", value: "6 pagos al inicio" },
       ],
       pasos: [
-        { texto: "Calcula primero la anualidad vencida equivalente:", calculo: "800.000 · [(1,01^6 − 1) / 0,01] = $ 4.921.610" },
-        { texto: "Multiplica por (1 + i), porque cada pago entra un mes antes:", calculo: "VF anticipada = 4.921.610 · 1,01" },
-        { texto: "Obtén el valor final:", calculo: "VF anticipada = $ 4.970.826" },
+        { texto: "Calcula primero la anualidad vencida equivalente:", calculo: "800.000 · [(1,01^6 − 1) / 0,01] = $ 4.921.612" },
+        { texto: "Multiplica por (1 + i), porque cada pago entra un mes antes:", calculo: "VF anticipada = 4.921.612 · 1,01" },
+        { texto: "Obtén el valor final:", calculo: "VF anticipada = $ 4.970.828" },
       ],
-      resultado: "El valor futuro es aproximadamente $ 4.970.826, mayor que el de una anualidad vencida por el mes extra de crecimiento.",
+      resultado: "El valor futuro es aproximadamente $ 4.970.828, mayor que el de una anualidad vencida por el mes extra de crecimiento.",
     },
   },
 ]

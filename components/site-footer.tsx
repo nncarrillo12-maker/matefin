@@ -9,7 +9,7 @@ export function SiteFooter() {
           <div className="max-w-md">
             <p className="font-display text-sm font-bold">Finanzas Claras</p>
             <p className="mt-1 text-sm text-muted-foreground text-pretty">
-              Herramienta digital de educación financiera. Matemáticas Financieras · Primer Corte · 2026-2.
+              Herramienta digital de educación financiera. Matemáticas Financieras · Segundo Corte · 2026-2.
             </p>
           </div>
 

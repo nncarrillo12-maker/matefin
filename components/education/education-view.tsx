@@ -77,12 +77,12 @@ export function EducationView() {
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg bg-foreground px-4 py-5 text-center">
-              <p className="text-xs font-medium uppercase tracking-wide text-background/60">Valor futuro</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-background/60">{active === "conversion" ? "Tasa efectiva anual" : "Valor futuro"}</p>
               <p className="mt-1 font-mono text-lg font-semibold text-background">{concept.formula}</p>
             </div>
             <div className="rounded-lg bg-secondary px-4 py-5 text-center">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Ganancia neta (intereses)
+                {active === "conversion" ? "Tasa periódica vencida" : active.startsWith("anualidad") ? "Valor presente" : "Ganancia neta (intereses)"}
               </p>
               <p className="mt-1 font-mono text-lg font-semibold text-foreground">{concept.formulaInteres}</p>
             </div>

@@ -10,8 +10,9 @@ import {
   type SharedConfig,
   type Periodicity,
   type Operation,
-  PERIODICITY_OPTIONS,
+
 } from "./simulator"
+import { RATE_PERIODS } from "@/lib/rates"
 import type { Regime } from "@/lib/finance"
 import { CURRENCIES, type Currency } from "@/lib/format"
 
@@ -32,7 +33,8 @@ export function SimulatorView() {
   const [rateKind, setRateKind] = useState<"nominal" | "efectiva">("efectiva")
   const [rateMode, setRateMode] = useState<"vencida" | "anticipada">("vencida")
 
-  const config: SharedConfig = { regime, periodicity, currency, operation, rateKind, rateMode }
+  const [months, setMonths] = useState("1")
+  const config: SharedConfig = { regime, periodicity, customMonths: Number(months), currency, operation, rateKind, rateMode }
   const isContinuo = regime === "continuo"
   const isCompuesto = regime === "compuesto"
   const activeRegime = REGIMES.find((r) => r.value === regime)!
@@ -119,7 +121,7 @@ export function SimulatorView() {
               disabled={isContinuo}
               onChange={(e) => setPeriodicity(e.target.value as Periodicity)}
             >
-              {PERIODICITY_OPTIONS.map((p) => (
+              {RATE_PERIODS.map((p) => (
                 <option key={p.value} value={p.value}>
                   {p.label}
                 </option>
@@ -127,6 +129,7 @@ export function SimulatorView() {
             </SelectInput>
           </Field>
 
+          {!isContinuo && periodicity === "custom" && <Field label="Meses por periodo"><input type="number" min="0.01" step="any" value={months} onChange={e => setMonths(e.target.value)} /></Field>}
           <Field label="Moneda" hint="Solo afecta el formato de presentación de los montos.">
             <SelectInput value={currency} onChange={(e) => setCurrency(e.target.value as Currency)}>
               {CURRENCIES.map((c) => (

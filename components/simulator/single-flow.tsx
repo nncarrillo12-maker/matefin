@@ -30,6 +30,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
   const calculationMpp = config.regime === "compuesto" ? 1 : mpp
 
   const result = useMemo(() => {
+    if (!(mpp > 0)) return { ok: false, error: "Ingresa una periodicidad positiva." }
     const vpNum = parseNumber(vp)
     const vfNum = parseNumber(vf)
     const enteredRate = parseNumber(ratePct) / 100
@@ -38,7 +39,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       if (config.regime === "compuesto" && Number.isFinite(enteredRate)) {
         // El compuesto admite cualquier periodicidad: llevamos la tasa a E.M. vencida.
         rate = convertRate(
-          { rate: enteredRate, kind: config.rateKind, mode: config.rateMode, period: config.periodicity },
+          { rate: enteredRate, kind: config.rateKind, mode: config.rateMode, period: config.periodicity, customMonths: config.customMonths },
           { kind: "efectiva", mode: "vencida", period: "mensual" },
         )
       }
@@ -58,7 +59,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       n: unknown === "n" ? undefined : (y > 0 || m > 0 ? nPeriods : undefined),
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.regime, config.rateKind, config.rateMode, config.periodicity, unknown, vp, vf, ratePct, years, months, calculationMpp])
+  }, [config.regime, config.rateKind, config.rateMode, config.periodicity, config.customMonths, unknown, vp, vf, ratePct, years, months, calculationMpp])
 
   const show = (u: SingleUnknown) => unknown !== u
 
@@ -93,7 +94,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
 
           {show("i") && (
             <Field
-              label={`Tasa de interés (i) — % ${isContinuo ? "anual" : "por " + unitName.singular}`}
+              label={`Tasa de interés (i) — % ${isContinuo || config.regime === "compuesto" && config.rateKind === "nominal" ? "anual" : "por " + unitName.singular}`}
               hint={
                 isContinuo
                   ? "En interés continuo la tasa es anual."
@@ -112,7 +113,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
               hint={
                 isContinuo
                   ? "El tiempo se convierte a años (convención del interés continuo)."
-                  : `Se convierte automáticamente a ${unitName.plural} (${mpp} ${mpp === 1 ? "mes" : "meses"} por periodo).`
+                  : config.regime === "compuesto" ? "El tiempo de cálculo se expresa en meses." : `Se convierte automáticamente a ${unitName.plural} (${mpp} ${mpp === 1 ? "mes" : "meses"} por periodo).`
               }
             >
               <div className="flex gap-2">
@@ -141,7 +142,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       </div>
 
       {/* Resultado */}
-      <ResultPanel config={config} unknown={unknown} result={result} mpp={mpp} unitName={unitName} />
+      <ResultPanel config={config} unknown={unknown} result={result} mpp={calculationMpp} unitName={config.regime === "compuesto" ? { singular: "mes", plural: "meses" } : unitName} />
     </div>
   )
 }

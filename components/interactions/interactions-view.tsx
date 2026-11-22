@@ -11,7 +11,7 @@ import {
   MessagesSquare,
   User,
 } from "lucide-react"
-import { INTERACTIONS, SECOND_CUT_INTERACTIONS, type Interaction, type Mensaje } from "./data"
+import { INTERACTIONS, SECOND_CUT_INTERACTIONS, THIRD_CUT_INTERACTIONS, type Interaction, type Mensaje } from "./data"
 
 export function InteractionsView() {
   return (
@@ -28,24 +28,15 @@ export function InteractionsView() {
 
       <div className="rounded-xl border border-border bg-secondary/40 p-4 text-sm text-muted-foreground">
         <p className="text-pretty">
-          <strong className="text-foreground">Cómo leer esta sección:</strong> cada tarjeta corresponde a una
-          conversación real. Al menos una documenta un error de la IA que detectamos, con el valor equivocado, el valor
-          correcto y la razón. Los enlaces abren la conversación original.
+          Cada tarjeta muestra qué se pidió, cómo se revisó la respuesta y dónde se puede comprobar el resultado en la herramienta.
+          Los enlaces abren las conversaciones originales disponibles.
         </p>
       </div>
 
-      <section aria-labelledby="primer-corte" className="space-y-4">
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Registro inicial</p>
-            <h2 id="primer-corte" className="mt-1 font-display text-xl font-bold">Primer corte</h2>
-          </div>
-          <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground ring-1 ring-border">
-            {INTERACTIONS.length} interacciones
-          </span>
-        </div>
-        <ol className="space-y-6">
-          {INTERACTIONS.map((it) => (
+      <section aria-labelledby="tercer-corte" className="space-y-4">
+        <h2 id="tercer-corte" className="border-b border-border pb-3 font-display text-xl font-bold">Tercer corte</h2>
+        <ol start={7} className="space-y-6">
+          {THIRD_CUT_INTERACTIONS.map((it) => (
             <InteractionCard key={it.id} interaction={it} />
           ))}
         </ol>
@@ -63,6 +54,23 @@ export function InteractionsView() {
         </div>
         <ol start={4} className="space-y-6">
           {SECOND_CUT_INTERACTIONS.map((it) => (
+            <InteractionCard key={it.id} interaction={it} resumen />
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="primer-corte" className="space-y-4 pt-4">
+        <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Registro inicial</p>
+            <h2 id="primer-corte" className="mt-1 font-display text-xl font-bold">Primer corte</h2>
+          </div>
+          <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground ring-1 ring-border">
+            {INTERACTIONS.length} interacciones
+          </span>
+        </div>
+        <ol className="space-y-6">
+          {INTERACTIONS.map((it) => (
             <InteractionCard key={it.id} interaction={it} />
           ))}
         </ol>
@@ -71,7 +79,7 @@ export function InteractionsView() {
   )
 }
 
-function InteractionCard({ interaction }: { interaction: Interaction }) {
+function InteractionCard({ interaction, resumen = false }: { interaction: Interaction; resumen?: boolean }) {
   const hasError = !!interaction.error
   return (
     <li className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -80,7 +88,7 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
           <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
             {interaction.id}
           </span>
-          <h2 className="font-display text-base font-bold text-pretty">{interaction.titulo}</h2>
+          <h3 className="font-display text-base font-bold text-pretty">{interaction.titulo}</h3>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-muted-foreground ring-1 ring-border">
@@ -95,12 +103,29 @@ function InteractionCard({ interaction }: { interaction: Interaction }) {
       </div>
 
       <div className="grid gap-5 p-5 sm:p-6">
-        <Row icon={MessageSquare} label={interaction.id >= 4 ? "Consulta resumida" : "Prompt / instrucción"} tone="primary">
+        <Row icon={MessageSquare} label={resumen ? "Consulta resumida" : "Prompt / instrucción"} tone="primary">
           {interaction.prompt}
         </Row>
-        <Row icon={Bot} label={interaction.id >= 4 ? "Comprobación matemática" : "Qué respondió la IA"} tone="muted">
+        <Row icon={Bot} label={resumen ? "Comprobación matemática" : "Respuesta inicial de la IA"} tone="muted">
           {interaction.respuestaIA}
         </Row>
+
+        {interaction.revision && (
+          <Row icon={Eye} label="Qué faltaba comprobar o mejorar" tone="muted">
+            {interaction.revision}
+          </Row>
+        )}
+
+        {interaction.seguimiento && (
+          <>
+            <Row icon={MessageSquare} label="Consulta de seguimiento" tone="primary">
+              {interaction.seguimiento.prompt}
+            </Row>
+            <Row icon={Bot} label="Respuesta de seguimiento" tone="muted">
+              {interaction.seguimiento.respuesta}
+            </Row>
+          </>
+        )}
 
         {interaction.error && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">

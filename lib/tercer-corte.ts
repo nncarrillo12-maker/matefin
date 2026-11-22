@@ -41,20 +41,29 @@ export function tabla(p: Prestamo) {
   exigir(!p.compra || (Number.isInteger(p.compra) && p.compra>=1 && p.compra<=n), "La compra de cartera debe estar dentro del plazo.")
   exigir(!p.abono || (Number.isInteger(p.momento) && p.momento>=1 && p.momento<=n), "Revisa el periodo del abono.")
   let saldo = capital
+  let costosDiferidos = 0
+  const pagoUnico = sistema === "Americano" && p.capitalizar
   const filas = [{t:0, cuota:0, interes:0, otros:0, amort:0, extra:0, saldo}]
   for (let t=1;t<=n;t++) {
     const cambio = p.compra > 0 && t >= p.compra
     const i = cambio ? p.nueva : p.i
-    const otros = cambio ? p.costos : p.otros
+    let otros = cambio ? p.costos : p.otros
+    if (pagoUnico) {
+      costosDiferidos += otros
+      otros = t === n ? costosDiferidos : 0
+    }
     const interes = saldo*i
     const quedan = n-t+1
+    const extra = t===p.momento ? p.abono : 0
     let amort = 0
-    if (t===n) amort = saldo-residual
+    if (t===n) {
+      exigir(extra <= saldo-residual+1e-7, "El abono adicional supera el capital de la última cuota.")
+      amort = saldo-residual-extra
+    }
     else if (t<=gracia || sistema==="Americano") amort = p.capitalizar ? -interes : 0
     else if (sistema==="Alemán" || i===0) amort = (saldo-residual)/quedan
     else amort = (saldo-residual)*i / -Math.expm1(-quedan*Math.log1p(i)) + residual*i - interes
-    const extra = t===p.momento ? p.abono : 0
-    exigir(extra <= saldo-amort-residual+1e-7, "El abono adicional supera el capital disponible después de la cuota.")
+    if (t !== n && extra > 0) exigir(extra <= saldo-amort-residual+1e-7, "El abono adicional supera el capital disponible después de la cuota.")
     saldo -= amort+extra
     const cuota = amort+interes+otros+extra
     exigir(Number.isFinite(cuota) && Number.isFinite(saldo), "La tabla excede el rango de cálculo.")

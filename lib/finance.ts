@@ -305,6 +305,9 @@ function bisectionScan(fn: (x: number) => number, lo: number, hi: number, steps:
 
 export function solveEquationOfValue(input: EqInput): EqResult {
   const { regime, flows, focal, unknown } = input
+  if (unknown !== "i" && input.i != null && (!Number.isFinite(input.i) || input.i < 0)) {
+    return { ok: false, error: "La tasa de interés debe ser un número mayor o igual a cero." }
+  }
 
   if (flows.length < 2) {
     return { ok: false, error: "Agrega al menos dos flujos para plantear la ecuación de valor." }

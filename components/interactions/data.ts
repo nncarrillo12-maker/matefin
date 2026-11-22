@@ -14,6 +14,9 @@ export interface Interaction {
   prompt: string
   /** Lo que la IA respondió / produjo. */
   respuestaIA: string
+  /** Qué faltaba comprobar o mejorar en la primera respuesta. */
+  revision?: string
+  seguimiento?: { prompt: string; respuesta: string }
   /** Cómo se corrigió o mejoró: nuevo prompt, edición manual, cambio de enfoque. */
   correccion: string
   /** El resultado final que quedó en la herramienta. */
@@ -227,4 +230,55 @@ export const SECOND_CUT_INTERACTIONS: Interaction[] = [
     "enlace": "https://chatgpt.com/share/6b021bbb-e398-83ea-a70f-36a9b1cec961",
     "conversacion": []
   }
+]
+
+export const THIRD_CUT_INTERACTIONS: Interaction[] = [
+  {
+    id: 7,
+    titulo: "Gradientes · el primer aumento y el pago de hoy",
+    herramienta: "ChatGPT",
+    prompt: "Estoy verificando un simulador de matemáticas financieras. Deposito $100.000 al final del primer mes y hago cuatro depósitos mensuales. El aporte aumenta $10.000 cada dos cuotas. Además, deposito $20.000 hoy, en el momento cero. La tasa es del 1 % efectivo mensual. Construye la línea de tiempo y calcula el valor presente y el valor futuro al final del mes 4. Explícame en qué mes ocurre el primer aumento y cómo tratas el depósito de hoy.",
+    respuestaIA: "Ordenó los pagos como $20.000 hoy, $100.000 en los meses 1 y 2 y $110.000 en los meses 3 y 4. Reportó $429.512,26 de VP y $446.952,18 de VF.",
+    revision: "La línea de tiempo y los resultados coincidían. Faltaba mostrar cómo reproducir el caso con los campos del simulador.",
+    correccion: "Reprodujimos los flujos en el simulador y documentamos los datos de entrada. El depósito de hoy entra por $20.000 en el VP y gana cuatro meses de interés para el VF. El primer cambio del gradiente llega en la cuota 3.",
+    resultadoFinal: "VP de $429.512,26 y VF de $446.952,18 al cierre del mes 4.",
+    parteVisible: "Tercer corte → Gradientes → Aritmético e Inversión. Ingresa $100.000 de primera cuota, cuatro cuotas mensuales, cambio de $10.000, dos cuotas por escalón y 1 % efectivo mensual vencido. En Agregar pago único, ingresa $20.000 en el periodo cero.",
+    enlace: "https://chatgpt.com/share/6b025d5d-4334-83e9-931f-d7e94d54a514",
+    conversacion: [],
+  },
+  {
+    id: 8,
+    titulo: "Perpetuidades · arriendo que sube cada dos meses",
+    herramienta: "ChatGPT",
+    prompt: "Un local paga $100.000 al final de cada mes de forma indefinida. El arriendo sube $1.000 cada dos meses. La tasa es del 2 % efectivo mensual. Escribe los primeros seis pagos y calcula el valor presente. Muestra cómo incorporas la frecuencia del aumento y comprueba el resultado sumando los primeros 600 pagos descontados.",
+    respuestaIA: "Mostró dos pagos por cada monto, empezando en $100.000. Obtuvo $6.237.623,76 para todos los pagos y $6.237.476,87 al sumar los primeros 600.",
+    revision: "La respuesta distinguía correctamente los dos valores. Faltaba mostrar cómo el campo Cuotas por escalón representa la frecuencia del aumento en el simulador.",
+    correccion: "Recalculamos los primeros 600 flujos mes a mes. Comprobamos que los $146,89 de diferencia corresponden a los pagos desde el mes 601 y verificamos en el simulador el valor de la serie completa. Dos cuotas mensuales por escalón significan que el primer aumento llega en el mes 3.",
+    resultadoFinal: "El VP de la perpetuidad es $6.237.623,76.",
+    parteVisible: "Tercer corte → Perpetuidades → Aritmético e Inversión. Ingresa $100.000 de primera cuota mensual, cambio de $1.000, dos cuotas por escalón y 2 % efectivo mensual vencido.",
+    enlace: "https://chatgpt.com/share/6b025d9e-9344-83e9-8f61-fed3370cbab4",
+    conversacion: [],
+  },
+  {
+    id: 9,
+    titulo: "Amortización · gracia, abono y opción de compra",
+    herramienta: "ChatGPT",
+    prompt: "Un crédito de $1.000.000 al 1 % efectivo mensual tiene cuatro periodos en total. En el mes 1 hay gracia y solo pago intereses. Desde el mes 2 se amortiza por el sistema francés. Junto con la cuota del mes 2 hago un abono extraordinario de $100.000 a capital. El plazo se mantiene y no hay otros costos. Construye la tabla mes a mes, separa el abono extraordinario de la cuota ordinaria e indica desde qué mes cambia la cuota. Verifica el saldo final.",
+    respuestaIA: "Calculó $10.000 de intereses en el mes de gracia, una cuota ordinaria de $340.022,11 en el mes 2 y cuotas de $289.270,87 desde el mes 3. La tabla separó el abono adicional de $100.000 y cerró con saldo de $0.",
+    revision: "El crédito francés coincidió con la tabla. Al revisar otro caso de amortización, encontramos que el código de leasing generado por IA aplicaba el porcentaje de la opción de compra al desembolso.",
+    seguimiento: {
+      prompt: "Al revisar el código inicial del leasing generado con IA, encontramos que calculaba la opción de compra multiplicando el monto financiado por el porcentaje. Probemos un vehículo de $10.000.000, con $9.000.000 financiados y una opción de compra del 10 % sobre el valor inicial del vehículo. Muestra cuánto daba el código anterior, cuánto debe dar y por qué. Explica cómo el campo «Valor inicial del bien» corrige el cálculo en la pantalla de Amortización.",
+      respuesta: "ChatGPT reprodujo los $900.000 del cálculo anterior y confirmó que la opción era de $1.000.000. Explicó cómo separar el precio del vehículo del capital inicial de la tabla.",
+    },
+    error: {
+      valorIA: "$900.000 (10 % de $9.000.000 financiados)",
+      valorCorrecto: "$1.000.000 (10 % de $10.000.000 del bien)",
+      razon: "El enunciado aplica el 10 % al valor inicial del vehículo. El código inicial usaba el desembolso como base y dejaba la opción de compra $100.000 por debajo.",
+    },
+    correccion: "Añadimos el campo Valor inicial del bien. La opción se calcula con ese dato y la tabla de amortización comienza con los $9.000.000 financiados. En el caso francés también confirmamos que el pago del mes 2 suma la cuota ordinaria y el abono.",
+    resultadoFinal: "En leasing, saldo final de $1.000.000 antes de pagar la opción. En el caso francés, pago de $440.022,11 en el mes 2, cuotas de $289.270,87 en los meses 3 y 4 y saldo final de $0.",
+    parteVisible: "Tercer corte → Amortización → Francés → Leasing. Ingresa $9.000.000 de desembolso, $10.000.000 en Valor inicial del bien y 10 % de opción. La tabla termina con $1.000.000 en Saldo.",
+    enlace: "https://chatgpt.com/share/6b0267d5-88b0-83e8-bb45-4975ce0078a8",
+    conversacion: [],
+  },
 ]

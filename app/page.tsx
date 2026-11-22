@@ -14,7 +14,7 @@ const sections = [
     href: "/educacion",
     icon: BookOpen,
     title: "Educación financiera",
-    desc: "Entiende el interés simple, compuesto y continuo con explicaciones tan claras que las entendería un niño de 5 años, sin perder precisión técnica.",
+    desc: "Aprende con ejemplos de intereses, conversión de tasas, anualidades, gradientes, perpetuidades y amortización.",
     cta: "Aprender los conceptos",
   },
   {
@@ -23,6 +23,13 @@ const sections = [
     title: "Simulador / Cotización",
     desc: "Calcula créditos e inversiones con pagos únicos o periódicos. Convierte tasas, calcula anualidades y resuelve VF, VP, tasa, tiempo, flujos desconocidos y ecuaciones de valor.",
     cta: "Abrir el simulador",
+  },
+  {
+    href: "/tercer-corte",
+    icon: TrendingUp,
+    title: "Tercer corte",
+    desc: "Calcula gradientes y perpetuidades. Simula créditos con seguros, abonos extraordinarios, compra de cartera y leasing.",
+    cta: "Ver simuladores del tercer corte",
   },
   {
     href: "/interacciones",
@@ -118,11 +125,11 @@ export default function HomePage() {
 
       {/* Secciones */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <h2 className="font-display text-2xl font-bold tracking-tight">La herramienta tiene tres secciones</h2>
+        <h2 className="font-display text-2xl font-bold tracking-tight">Explora Finanzas Claras</h2>
         <p className="mt-2 max-w-2xl text-muted-foreground text-pretty">
           Aprende, simula y revisa cómo se construyó. Todo pensado para un cliente sin formación técnica.
         </p>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {sections.map((s) => (
             <Link
               key={s.href}
@@ -152,8 +159,7 @@ export default function HomePage() {
                 Qué resuelve el simulador
               </h2>
               <p className="mt-3 text-muted-foreground text-pretty">
-                Cumple las ocho capacidades obligatorias del primer corte. No es una calculadora de cuatro variables:
-                resuelve ejercicios reales con varios flujos y distintas incógnitas.
+                Calcula cuánto valen los flujos en una fecha, compara tasas y estima cuánto pagarás o recibirás.
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 <span className="rounded-full bg-inversion/10 px-3 py-1 text-xs font-semibold text-inversion ring-1 ring-inversion/20">

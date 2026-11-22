@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 export default function SimuladorPage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <a href="/tercer-corte" className="mb-5 inline-block text-primary underline">Simular gradientes, perpetuidades y amortización</a>
       <SimulatorView />
     </main>
   )

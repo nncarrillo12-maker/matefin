@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { EducationView } from "@/components/education/education-view"
+import { EducacionTercerCorte } from "@/components/education/tercer-corte"
 
 export const metadata: Metadata = {
   title: "Educación financiera · Finanzas Claras",
@@ -20,6 +21,7 @@ export default function EducacionPage() {
         </p>
       </header>
       <EducationView />
+      <EducacionTercerCorte />
     </div>
   )
 }

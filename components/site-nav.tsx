@@ -10,6 +10,7 @@ const links = [
   { href: "/", label: "Inicio" },
   { href: "/educacion", label: "Educación financiera" },
   { href: "/simulador", label: "Simulador" },
+  { href: "/tercer-corte", label: "Tercer corte" },
   { href: "/interacciones", label: "Interacciones" },
 ]
 

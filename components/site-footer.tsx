@@ -17,7 +17,7 @@ export function SiteFooter() {
             <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2">
               <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
               <span className="text-muted-foreground">
-                Construida con la herramienta de IA <span className="font-semibold text-foreground">v0 de Vercel</span>
+                Construida con apoyo de <span className="font-semibold text-foreground">v0 de Vercel, Gemini y ChatGPT</span>
               </span>
             </div>
             <nav className="flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground" aria-label="Enlaces del pie de página">
@@ -26,6 +26,9 @@ export function SiteFooter() {
               </Link>
               <Link href="/simulador" className="hover:text-foreground">
                 Simulador
+              </Link>
+              <Link href="/tercer-corte" className="hover:text-foreground">
+                Tercer corte
               </Link>
               <Link href="/interacciones" className="hover:text-foreground">
                 Interacciones

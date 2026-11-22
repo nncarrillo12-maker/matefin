@@ -72,7 +72,9 @@ export function EquationOfValue({ config }: { config: SharedConfig }) {
       try {
         const period = { period: config.periodicity, customMonths: config.customMonths }
         rate = convertRate({ ...period, rate, kind: config.rateKind, mode: config.rateMode }, { ...period, kind: "efectiva", mode: "vencida" })
-      } catch { return { ok: false, error: "Revisa la tasa y su periodicidad." } }
+      } catch (error) {
+        return { ok: false, error: error instanceof Error ? error.message : "Revisa la tasa y su periodicidad." }
+      }
     }
 
     const engineFlows: Flow[] = flows.map((f) => {

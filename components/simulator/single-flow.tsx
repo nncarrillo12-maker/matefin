@@ -33,7 +33,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
     if (!(mpp > 0)) return { ok: false, error: "Ingresa una periodicidad positiva." }
     const vpNum = parseNumber(vp)
     const vfNum = parseNumber(vf)
-    const enteredRate = parseNumber(ratePct) / 100
+    const enteredRate = unknown === "i" ? Number.NaN : parseNumber(ratePct) / 100
     let rate = enteredRate
     try {
       if (config.regime === "compuesto" && Number.isFinite(enteredRate)) {
@@ -43,12 +43,18 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
           { kind: "efectiva", mode: "vencida", period: "mensual" },
         )
       }
-    } catch {
-      return { ok: false, error: "La tasa ingresada no es válida para esta modalidad." }
+    } catch (error) {
+      return { ok: false, error: error instanceof Error ? error.message : "La tasa ingresada no es válida." }
     }
-    const y = parseNumber(years) || 0
-    const m = parseNumber(months) || 0
-    const nPeriods = (y * 12 + m) / calculationMpp
+    let nPeriods: number | undefined
+    if (unknown !== "n" && (years.trim() !== "" || months.trim() !== "")) {
+      const y = years.trim() === "" ? 0 : parseNumber(years)
+      const m = months.trim() === "" ? 0 : parseNumber(months)
+      if (![y, m].every(value => Number.isFinite(value) && value >= 0)) {
+        return { ok: false, error: "Ingresa años y meses válidos, mayores o iguales a cero." }
+      }
+      nPeriods = (y * 12 + m) / calculationMpp
+    }
 
     return solveSingle({
       regime: config.regime,
@@ -56,7 +62,7 @@ export function SingleFlow({ config }: { config: SharedConfig }) {
       vp: Number.isFinite(vpNum) ? vpNum : undefined,
       vf: Number.isFinite(vfNum) ? vfNum : undefined,
       i: Number.isFinite(rate) ? rate : undefined,
-      n: unknown === "n" ? undefined : (y > 0 || m > 0 ? nPeriods : undefined),
+      n: nPeriods,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.regime, config.rateKind, config.rateMode, config.periodicity, config.customMonths, unknown, vp, vf, ratePct, years, months, calculationMpp])
